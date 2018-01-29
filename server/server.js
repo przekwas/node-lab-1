@@ -1,6 +1,5 @@
 const path = require("path");
 const fs = require("fs");
-const request = require("request");
 
 let chirpPath = path.join(__dirname, "../chirps.json");
 
@@ -51,5 +50,7 @@ fs.readFile(chirpPath, (error, data) => {
         console.log(`${element.author} Chirpped:  ${element.chirp}`);
     });
 });
+
+
 
 
