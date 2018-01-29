@@ -4,12 +4,12 @@ const rp = require("request-promise");
 
 let articlePath = path.join(__dirname, "./popular-articles.json");
 
-rp("https://reddit.com/r/popular.json")
+rp({uri: "https://reddit.com/r/popular.json", json: true}) 
     .then(body => {
 
         let articleArray = [];
 
-        JSON.parse(body).data.children.forEach(item => {
+        body.data.children.forEach(item => {
 
             let title = item.data.title;
             let url = item.data.url;
