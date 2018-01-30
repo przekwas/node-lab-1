@@ -2,6 +2,7 @@ const path = require("path");
 const fs = require("fs");
 const rp = require("request-promise");
 const https = require("https");
+const url = require("url")
 
 let downloadPath = path.join(__dirname, "./downloads");
 
@@ -9,26 +10,26 @@ rp({ uri: "https://reddit.com/r/popular.json", json: true })
     .then(body => {
 
         body.data.children.forEach(item => {
-            if (item.data.post_hint === "image" || item.data.post_hint === "rich:video") {
+            if (item.data.is_reddit_media_domain == true && item.data.is_video == false) {
+
+                srcUrl = item.data.url;
 
                 const options = {
                     url: item.data.url,
-                    encoding: null,
-                    resolveWithFullResponse: true
+                    encoding: null
                 };
 
-                https.get(options.url, (res) => {
-                    console.log(res.headers['content-type'])
-                        res.pipe(
-                            fs.createWriteStream(`./downloads/${item.data.id}.${res.headers['content-type'].slice(6)}`)
-                            
-                        )
-                    }
-                )
+                let fileExt = url.parse(srcUrl).pathname.split('.').pop();
+
+
+                rp.get(options)
+                    .then(function (res) {
+                        const buffer = Buffer.from(res, 'utf8');
+                        fs.writeFileSync(`./downloads/${item.data.id}.${fileExt}`, buffer);
+                    });
             }
         })
     })
-    .catch(error => {
-        console.log(error);
-    })
+
+
 
