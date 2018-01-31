@@ -23,7 +23,7 @@ rp({ uri: "https://reddit.com/r/popular.json", json: true })
 
 
                 rp.get(options)
-                    .then(function (res) {
+                    .then((res) => {
                         const buffer = Buffer.from(res, 'utf8');
                         fs.writeFileSync(`./downloads/${item.data.id}.${fileExt}`, buffer);
                     });
